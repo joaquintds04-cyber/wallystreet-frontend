@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { BASE_URL } from '../utils/constants'
 
 function RegistroPage() {
   const [nombre, setNombre] = useState('')
@@ -39,7 +40,7 @@ function RegistroPage() {
 
     try {
       await axios.post(
-        'http://localhost/trabajophp/src/public/users',
+        `${BASE_URL}/users`,
         { name: nombre, email, password }
       )
       // Si salió bien, redirigimos al login

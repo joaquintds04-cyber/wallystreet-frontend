@@ -1,5 +1,14 @@
+import {useEffect, useState} from 'react'
+import axios from 'axios'
+import { BASE_URL } from '../utils/constants'
+
 function PortfolioPage() {
-  return <h2>Página de Mi Portfolio</h2>
+  const [portfolio, setPortfolio] = useState([])
+  const [perfil, setPerfil] = useState(null)
+  const token = localStorage.getItem('token')
+  const userId = localStorage.getItem('userId')
+
+
 }
 
 export default PortfolioPage

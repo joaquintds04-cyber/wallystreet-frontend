@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { BASE_URL } from '../utils/constants'
 
 function StatPage() {
   const [assets, setAssets] = useState([])
@@ -7,7 +8,7 @@ function StatPage() {
   useEffect(() => {
     const obtenerAssets = async () => {
       try {
-        const response = await axios.get('http://localhost/trabajophp/src/public/assets')
+        const response = await axios.get(`${BASE_URL}/assets`)
         setAssets(response.data)
       } catch (error) {
         console.error('Error al obtener assets:', error)
