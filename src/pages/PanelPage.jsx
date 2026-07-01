@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import api from '../utils/api'
 import { REFRESH_INTERVAL } from '../utils/constants'
 import AssetCard from '../components/AssetCard'
+import ModalTransaccion from '../components/ModalTransaccion' // Importamos el modal genérico
 import './PanelPage.css'
 import './StatPage.css'
 
@@ -14,13 +15,10 @@ function PanelPage() {
   const [ordenPrecio, setOrdenPrecio] = useState('')
   const preciosAnterioresRef = useRef({})
 
-  // Logica necesaria para el panel
   const [modalCompra, setModalCompra] = useState(false)
   const [modalHistorial, setModalHistorial] = useState(false)
   const [assetSeleccionado, setAssetSeleccionado] = useState(null)
-  const [cantidad, setCantidad] = useState(1)
   const [historialData, setHistorialData] = useState([])
-  const [mensajeTransaccion, setMensajeTransaccion] = useState('')
 
   const obtenerAssets = async () => {
     try {
@@ -56,11 +54,8 @@ function PanelPage() {
     return () => clearInterval(intervalo)
   }, [])
 
-  // Funciones para abrir modales 
   const abrirModalCompra = (asset) => {
     setAssetSeleccionado(asset)
-    setCantidad(1)
-    setMensajeTransaccion('')
     setModalCompra(true)
   }
 
@@ -76,20 +71,16 @@ function PanelPage() {
     }
   }
 
-  const confirmarCompra = async () => {
+  const manejarTransaccionAPI = async (tipo, assetId, cantidadEnviada) => {
     try {
-      
       await api.post('/trade/buy', {
-        asset_id: assetSeleccionado.id,
-        quantity: Number(cantidad)
+        asset_id: assetId,
+        quantity: cantidadEnviada
       })
-      setMensajeTransaccion('¡Compra realizada con éxito!')
-
-      obtenerAssets()// Refrescar datos después de la compra
-
-      setTimeout(() => setModalCompra(false), 2000)
+      obtenerAssets() // Refrescamos balances y assets en tiempo real
+      return true
     } catch (error) {
-      setMensajeTransaccion(error.response?.data?.error || 'Error al comprar (Saldo insuficiente)')
+      return false
     }
   }
 
@@ -140,54 +131,52 @@ function PanelPage() {
         })}
       </div>
 
-      {/*  MODAL DE COMPRA  */}
-      {modalCompra && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Comprar {assetSeleccionado?.name}</h3>
-            <p>Precio actual: ${assetSeleccionado?.current_price}</p>
-            <input 
-              type="number" 
-              min="1" 
-              max="20" // Requerimiento del PDF
-              value={cantidad} 
-              onChange={e => setCantidad(e.target.value)} 
-            />
-            <p>Total: ${(assetSeleccionado?.current_price * cantidad).toFixed(2)}</p>
-            
-            {mensajeTransaccion && <p className="mensaje-transaccion">{mensajeTransaccion}</p>}
-            
-            <div className="modal-botones">
-              <button onClick={confirmarCompra}>Confirmar Compra</button>
-              <button onClick={() => setModalCompra(false)}>Cancelar</button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* COMPONENTE REUTILIZABLE DE TRANSACCIONES (COMPRA) */}
+      <ModalTransaccion 
+        isOpen={modalCompra}
+        onClose={() => setModalCompra(false)}
+        type="buy"
+        asset={assetSeleccionado}
+        balance={perfil?.balance}
+        onConfirm={manejarTransaccionAPI}
+      />
 
-      {/*  MODAL DE HISTORIAL  */}
+      {/* MODAL DE HISTORIAL  */}
       {modalHistorial && (
         <div className="modal-overlay">
           <div className="modal-content chart-modal">
             <h3>Últimos 5 valores: {assetSeleccionado?.name}</h3>
+            
             <div className="grafico-barras">
-              {historialData.map((dato, index) => (
-                <div key={index} className="barra-container">
-                  <div 
-                    className="barra" 
-                    // Simulamos una altura basada en el precio (ajusta según tus valores)
-                    style={{ height: `${dato.price_per_unit}%` }} 
-                  ></div>
-                  <span>${dato.price_per_unit}</span>
-                </div>
-              ))}
+              {historialData.map((dato, index) => {
+                const precioMaximo = Math.max(...historialData.map(d => Number(d.price_per_unit)), 1);
+                const porcentajeAltura = (Number(dato.price_per_unit) / precioMaximo) * 100;
+
+                return (
+                  <div key={index} className="barra-item-contenedor">
+                    <span className="barra-precio">${Number(dato.price_per_unit).toFixed(2)}</span>
+                
+                    <div className="barra-wrapper">
+                      <div 
+                        className="barra-dinamica" 
+                        style={{ height: `${porcentajeAltura}%` }} 
+                      ></div>
+                    </div>
+                    <span className="barra-eje-x">M{index + 1}</span>
+                  </div>
+                )
+              })}
             </div>
-            <button className="btn-cerrar" onClick={() => setModalHistorial(false)}>Cerrar</button>
+            
+            <div className="modal-botones">
+              <button className="btn-cerrar" onClick={() => setModalHistorial(false)}>Cerrar</button>
+            </div>
           </div>
         </div>
       )}
+    
     </div>
   )
 }
-
+      
 export default PanelPage

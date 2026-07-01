@@ -1,26 +1,30 @@
 import { useEffect, useState } from 'react'
 import api from '../utils/api'
 import AssetCard from '../components/AssetCard'
+import ModalTransaccion from '../components/ModalTransaccion' // Importamos el modal único
 import { REFRESH_INTERVAL } from '../utils/constants'
+import './PanelPage.css' 
 
 function PortfolioPage() {
   const [portfolio, setPortfolio] = useState([])
   const [perfil, setPerfil] = useState(null)
-  const [cantidades, setCantidades] = useState({})
-  const [mensaje, setMensaje] = useState('')
   const userId = localStorage.getItem('user_id')
   const [error, setError] = useState('')
 
-  const obtenerDatos = async () => {    // Definimos fuera del useEffect para poder llamarla después de cada operación (compra/venta) y refrescar los datos del portfolio y perfil.
+  // Estados del modal genérico
+  const [modalOpen, setModalOpen] = useState(false)
+  const [tipoTransaccion, setTipoTransaccion] = useState('buy') // 'buy' o 'sell'
+  const [assetSeleccionado, setAssetSeleccionado] = useState(null)
+
+  const obtenerDatos = async () => {
     try {
       const responsePortfolio = await api.get('/portfolio')
       setPortfolio(responsePortfolio.data)
 
       const responsePerfil = await api.get(`/users/${userId}`)
       setPerfil(responsePerfil.data)
-
     } catch (error) {
-      setError('No se pudo cargar el portfolio. Intentá de nuevo más tarde.')
+      setError('No se pudo cargar el portfolio.')
     }
   }
 
@@ -30,81 +34,74 @@ function PortfolioPage() {
     return () => clearInterval(intervalo)
   }, [])
 
-  const handleComprar = async (assetId) => {
-    const cantidad = cantidades[assetId] || 1
-
-    try {
-      await api.post('/trade/buy', { asset_id: assetId, quantity: cantidad })
-      setMensaje('Compra realizada exitosamente')
-      obtenerDatos()
-    } catch (error) {
-      setMensaje(error.response?.data?.error || 'Error al comprar')
-    }
+  const abrirModal = (tipo, item) => {
+    setTipoTransaccion(tipo)
+    setAssetSeleccionado(item)
+    setModalOpen(true)
   }
 
-  const handleVender = async (assetId) => {
-    const cantidad = cantidades[assetId] || 1
-
+  // Esta función unificada se la pasamos al Modal
+  const manejarTransaccionAPI = async (tipo, assetId, cantidad) => {
     try {
-      await api.post('/trade/sell', { asset_id: assetId, quantity: cantidad }) 
-      setMensaje('Venta realizada exitosamente')
-      obtenerDatos()
-    } catch (error) {
-      setMensaje(error.response?.data?.error || 'Error al vender')
+      const url = tipo === 'buy' ? '/trade/buy' : '/trade/sell'
+      await api.post(url, { asset_id: assetId, quantity: cantidad })
+      obtenerDatos() // Recargamos balances en caliente
+      return true
+    } catch (err) {
+      return false
     }
   }
 
   const handleEliminar = async (assetId) => {
-    try {
-      await api.delete(`/portfolio/${assetId}`)
-      setMensaje('Activo eliminado del portfolio')
-      obtenerDatos()
-    } catch (error) {
-      setMensaje(error.response?.data?.error || 'Error al eliminar')
+    if (window.confirm('¿Estás seguro de que deseas eliminar este activo?')) {
+      try {
+        await api.delete(`/portfolio/${assetId}`)
+        obtenerDatos()
+      } catch (err) {
+        alert('Error al eliminar')
+      }
     }
-  }
-
-  const handleCantidadChange = (assetId, valor) => {
-    setCantidades({ ...cantidades, [assetId]: Number(valor) })
   }
 
   return (
     <div className="page-container">
       <h2>Mi Portfolio</h2>
-
-      {perfil && <p>Dinero disponible: ${perfil.balance}</p>}
-      {mensaje && <p>{mensaje}</p>}
+      {perfil && <p className="saldo-disponible">Dinero disponible: ${perfil.balance}</p>}
       {error && <p className="error">{error}</p>}
 
       <div className="assets-grid">
-        {portfolio.map(item => ( // Cada item representa un activo en el portfolio
+        {portfolio.map(item => (
           <AssetCard key={item.asset_id} name={item.name} price={item.current_price}>
-            <p>Cantidad: {item.quantity}</p>
-            <p>Subtotal: ${item.subtotal}</p>
+            <p>Cantidad posee: {item.quantity}</p>
+            <p>Subtotal: ${Number(item.subtotal).toFixed(2)}</p>
 
-            <input
-              type="number"
-              min="1"
-              max="20"
-              placeholder="Cantidad"
-              value={cantidades[item.asset_id] || ''}
-              onChange={e => handleCantidadChange(item.asset_id, e.target.value)} // Actualiza la cantidad para ese activo específico
-             />
-
-              <button 
-                onClick={() => handleComprar(item.asset_id)}
-                disabled={perfil?.balance <= 0}
-              >
+            <div className="asset-acciones">
+              <button className="btn-comprar" onClick={() => abrirModal('buy', item)} disabled={perfil?.balance <= 0}>
                 Comprar
-            </button>
-            <button onClick={() => handleVender(item.asset_id)}>Vender</button>
+              </button>
+              <button onClick={() => abrirModal('sell', item)}>
+                Vender
+              </button>
+            </div>
 
-            {item.quantity === 0 && (
-              <button onClick={() => handleEliminar(item.asset_id)}>Eliminar</button> // Solo muestra el botón de eliminar si la cantidad es 0 (es decir, si se vendió todo el activo)
+            {Number(item.quantity) === 0 && (
+              <button className="btn-cerrar" style={{ marginTop: '10px', backgroundColor: '#dc3545' }} onClick={() => handleEliminar(item.asset_id)}>
+                Eliminar
+              </button>
             )}
           </AssetCard>
         ))}
       </div>
+
+      {/* LLAMADO AL COMPONENTE */}
+      <ModalTransaccion 
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        type={tipoTransaccion}
+        asset={assetSeleccionado}
+        balance={perfil?.balance}
+        onConfirm={manejarTransaccionAPI}
+      />
     </div>
   )
 }
