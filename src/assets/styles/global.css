@@ -42,7 +42,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* ===== Botones ===== */
+
 button {
     background-color: var(--color-primary);
     color: white;
@@ -64,7 +64,7 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* Botón de venta / acción destructiva */
+
 .btn-danger {
     background-color: var(--color-danger);
 }
@@ -73,7 +73,7 @@ button:disabled {
     background-color: #9a1f1f;
 }
 
-/* ===== Inputs ===== */
+
 input {
     padding: 8px 10px;
     border: 1px solid var(--color-border);
@@ -87,7 +87,7 @@ input:focus {
     border-color: var(--color-secondary);
 }
 
-/* ===== Header ===== */
+
 .header {
     background-color: var(--color-bg-card);
     border-bottom: 1px solid var(--color-border);
@@ -95,6 +95,11 @@ input:focus {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.navbar-error-block {
+    width: 100%;
+    margin: 5px 0 0 0;
 }
 
 .header img {
@@ -109,7 +114,7 @@ input:focus {
     color: var(--color-primary);
 }
 
-/* ===== Navbar ===== */
+
 .navbar {
     background-color: var(--color-primary);
     padding: 10px 24px;
@@ -146,7 +151,7 @@ input:focus {
     background-color: #e8eef9;
 }
 
-/* ===== Footer ===== */
+
 .footer {
     background-color: var(--color-bg-card);
     border-top: 1px solid var(--color-border);
@@ -157,7 +162,7 @@ input:focus {
     margin-top: 40px;
 }
 
-/* Indicadores de alza / baja, para usar junto con un texto o flecha */
+
 .precio-alza {
     color: var(--color-success);
     font-weight: 600;
@@ -168,7 +173,7 @@ input:focus {
     font-weight: 600;
 }
 
-/* ===== Mensajes de error / éxito en formularios ===== */
+
 .mensaje-error {
     color: var(--color-danger);
     background-color: #fdecea;
@@ -189,14 +194,14 @@ input:focus {
     margin: 10px 0;
 }
 
-/* ===== Contenedor general de página ===== */
+
 .page-container {
     max-width: 1100px;
     margin: 0 auto;
     padding: 24px;
 }
 
-/* ===== Contenedor de la Grilla  ===== */
+
 .assets-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -204,7 +209,7 @@ input:focus {
     padding: 16px 0;
     width: 100%;
 }
-/* ===== AssetCard - Componente reutilizable ===== */
+
 .asset-card-item {
     background-color: var(--color-bg-card);
     border: 1px solid var(--color-border);

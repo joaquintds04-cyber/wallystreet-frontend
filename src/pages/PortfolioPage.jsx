@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../utils/api'
 import AssetCard from '../components/AssetCard'
+import { REFRESH_INTERVAL } from '../utils/constants'
 
 function PortfolioPage() {
   const [portfolio, setPortfolio] = useState([])
@@ -8,6 +9,7 @@ function PortfolioPage() {
   const [cantidades, setCantidades] = useState({})
   const [mensaje, setMensaje] = useState('')
   const userId = localStorage.getItem('user_id')
+  const [error, setError] = useState('')
 
   const obtenerDatos = async () => {    // Definimos fuera del useEffect para poder llamarla después de cada operación (compra/venta) y refrescar los datos del portfolio y perfil.
     try {
@@ -18,12 +20,14 @@ function PortfolioPage() {
       setPerfil(responsePerfil.data)
 
     } catch (error) {
-      console.error('Error al obtener portfolio:', error)
+      setError('No se pudo cargar el portfolio. Intentá de nuevo más tarde.')
     }
   }
 
   useEffect(() => {
     obtenerDatos()
+    const intervalo = setInterval(obtenerDatos, REFRESH_INTERVAL)
+    return () => clearInterval(intervalo)
   }, [])
 
   const handleComprar = async (assetId) => {
@@ -70,6 +74,7 @@ function PortfolioPage() {
 
       {perfil && <p>Dinero disponible: ${perfil.balance}</p>}
       {mensaje && <p>{mensaje}</p>}
+      {error && <p className="error">{error}</p>}
 
       <div className="assets-grid">
         {portfolio.map(item => ( // Cada item representa un activo en el portfolio

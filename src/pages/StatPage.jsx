@@ -9,6 +9,7 @@ function StatPage() {
   const [filtroNombre, setFiltroNombre] = useState('')
   const [ordenPrecio, setOrdenPrecio] = useState('')
   const preciosAnterioresRef = useRef({})
+  const [error, setError] = useState('')
 
   const obtenerAssets = async () => {
     try {
@@ -32,7 +33,7 @@ function StatPage() {
       })))
 
     } catch (error) {
-      console.error('Error al obtener assets:', error)
+      setError('No se pudieron cargar los assets. Intentá de nuevo más tarde.')
     }
   }
 
@@ -67,6 +68,8 @@ function StatPage() {
           <option value="desc">Precio: mayor a menor</option>
         </select>
       </div>
+
+      {error && <p className="error">{error}</p>}
 
       <div className="assets-grid">
         {assetsFiltrados.map(asset => {
