@@ -1,7 +1,7 @@
 function FooterComponent() {
   return (
     <footer className="footer">
-      <p>Integrantes:  Joaquin Da Silva, Compañero 2, Compañero 3</p>
+      <p>Integrantes:  Joaquin Da Silva, Dante Cabral, Franco Pino</p>
       <p>2026</p>
     </footer>
   )

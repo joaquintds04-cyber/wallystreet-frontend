@@ -14,7 +14,7 @@ function PanelPage() {
   const [filtroNombre, setFiltroNombre] = useState('')
   const [ordenPrecio, setOrdenPrecio] = useState('')
   const preciosAnterioresRef = useRef({})
-
+  const [errorMsg, setErrorMsg] = useState('')
   const [modalCompra, setModalCompra] = useState(false)
   const [modalHistorial, setModalHistorial] = useState(false)
   const [assetSeleccionado, setAssetSeleccionado] = useState(null)
@@ -43,7 +43,7 @@ function PanelPage() {
       }
 
     } catch (error) {
-      console.error('Error al obtener assets:', error)
+      setErrorMsg('No se pudieron cargar los assets.')
     }
   }
 
@@ -67,7 +67,7 @@ function PanelPage() {
       const res = await api.get(`/assets/${asset.id}/history/5`)
       setHistorialData(res.data)
     } catch (error) {
-      console.error('Error al traer historial', error)
+      setErrorMsg('No se pudo cargar el historial.')
     }
   }
 
@@ -95,6 +95,7 @@ function PanelPage() {
   return (
     <div className="page-container">
       <h2>Panel Principal de Operaciones</h2>
+      {errorMsg && <p className="mensaje-error">{errorMsg}</p>}
       {perfil && <p className="saldo-disponible">Dinero disponible: ${perfil.balance}</p>}
       <div className="stat-filtros">
         <input

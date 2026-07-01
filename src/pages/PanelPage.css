@@ -138,3 +138,13 @@
     width: 100%;
     margin-top: 10px;
 }
+
+.btn-eliminar {
+    background-color: var(--color-danger);
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-eliminar:hover {
+    background-color: #9a1f1f;
+}

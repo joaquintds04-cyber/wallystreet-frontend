@@ -26,11 +26,6 @@ function LoginPage() {
       response.headers['Authorization']
       localStorage.setItem('token', token)
       localStorage.setItem('user_id', response.data.user_id)
-
-      //console.log('Token guardado:', localStorage.getItem('token'))
-      //console.log('Todos los headers:', response.headers)
-      //console.log('Login exitoso, token:', token)
-      //console.log('Respuesta:', response.data)
       navigate('/panel') // Redirige al panel después del login
     } catch (error) {
       setError(error.response?.data?.error || 'Error al iniciar sesión')

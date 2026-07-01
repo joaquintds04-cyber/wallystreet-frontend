@@ -40,7 +40,6 @@ function PortfolioPage() {
     setModalOpen(true)
   }
 
-  // Esta función unificada se la pasamos al Modal
   const manejarTransaccionAPI = async (tipo, assetId, cantidad) => {
     try {
       const url = tipo === 'buy' ? '/trade/buy' : '/trade/sell'
@@ -85,9 +84,9 @@ function PortfolioPage() {
             </div>
 
             {Number(item.quantity) === 0 && (
-              <button className="btn-cerrar" style={{ marginTop: '10px', backgroundColor: '#dc3545' }} onClick={() => handleEliminar(item.asset_id)}>
-                Eliminar
-              </button>
+              <button className="btn-eliminar" onClick={() => handleEliminar(item.asset_id)}>
+                 Eliminar
+             </button>
             )}
           </AssetCard>
         ))}

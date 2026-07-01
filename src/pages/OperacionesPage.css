@@ -1,0 +1,62 @@
+.operaciones-filtros {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.operaciones-filtros select {
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--color-bg-card);
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.operaciones-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-bg-card);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.operaciones-tabla th {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.operaciones-tabla td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+}
+
+.operaciones-tabla tr:last-child td {
+    border-bottom: none;
+}
+
+.operaciones-tabla tr:hover td {
+    background-color: var(--color-bg);
+}
+
+.tipo-compra {
+    color: var(--color-success);
+    font-weight: 600;
+}
+
+.tipo-venta {
+    color: var(--color-danger);
+    font-weight: 600;
+}
+
+.operaciones-vacio {
+    text-align: center;
+    color: var(--color-text-light);
+    margin-top: 40px;
+}

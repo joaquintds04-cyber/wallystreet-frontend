@@ -11,6 +11,7 @@ import PortfolioPage from './pages/PortfolioPage'
 import OperacionesPage from './pages/OperacionesPage'
 import PanelPage from './pages/PanelPage'
 import AdminPage from './pages/AdminPage'
+import RutaAdmin from './components/RutaAdmin'
 
 function App() {
   return (
@@ -24,10 +25,11 @@ function App() {
         <Route path="/registro" element={<RegistroPage />} />
 
         <Route path="/editar" element={<RutaProtegida><EditarPage /></RutaProtegida>} />
+        <Route path="/editar/:userId" element={<RutaProtegida><EditarPage /></RutaProtegida>} />
         <Route path="/portfolio" element={<RutaProtegida><PortfolioPage /></RutaProtegida>} />
         <Route path="/operaciones" element={<RutaProtegida><OperacionesPage /></RutaProtegida>} />
         <Route path="/panel" element={<RutaProtegida><PanelPage /></RutaProtegida>} />
-        <Route path="/admin" element={<RutaProtegida><AdminPage /></RutaProtegida>} />
+        <Route path="/admin" element={<RutaProtegida><RutaAdmin><AdminPage /></RutaAdmin></RutaProtegida>} />
       </Routes>
 
       <FooterComponent />

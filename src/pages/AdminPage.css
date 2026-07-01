@@ -1,0 +1,85 @@
+.admin-filtros {
+    margin-bottom: 24px;
+}
+
+.admin-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--color-bg-card);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-tabla th {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.admin-tabla td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px;
+}
+
+.admin-tabla tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-primer-lugar td {
+    background-color: #fff8e1;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.admin-trofeo {
+    margin-right: 4px;
+}
+
+.admin-paginado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.admin-paginado span {
+    font-size: 14px;
+    color: var(--color-text-light);
+}
+
+.admin-acciones {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-filtros select {
+    padding: 8px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--color-bg-card);
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.btn-editar-usuario {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #2c7be5;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-editar-usuario:hover {
+    background-color: #1a5bb8;
+}
