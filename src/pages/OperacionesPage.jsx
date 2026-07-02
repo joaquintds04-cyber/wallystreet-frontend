@@ -60,36 +60,39 @@ function OperacionesPage() {
 
       {error && <p className="mensaje-error">{error}</p>}
 
-      {transacciones.length === 0 ? (
-        <p className="operaciones-vacio">No hay operaciones para mostrar.</p>
-      ) : (
-        <table className="operaciones-tabla">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Asset</th>
-              <th>Tipo</th>
-              <th>Cantidad</th>
-              <th>Precio unitario</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transacciones.map(t => (
-              <tr key={t.id}>
-                <td>{new Date(t.transaction_date).toLocaleString()}</td>
-                <td>{t.asset_id}</td>
-                <td className={t.transaction_type === 'buy' ? 'tipo-compra' : 'tipo-venta'}>
-                  {t.transaction_type === 'buy' ? 'Compra' : 'Venta'}
-                </td>
-                <td>{t.quantity}</td>
-                <td>${Number(t.price_per_unit).toFixed(2)}</td>
-                <td>${Number(t.total_amount).toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    {transacciones.length === 0 ? (
+      <p className="operaciones-vacio">No hay operaciones para mostrar.</p>
+    ) : (
+     <table className="operaciones-tabla">
+       <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Asset</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+     {transacciones.map(t => {
+       const nombreAsset = assets.find(a => a.id === t.asset_id)?.name || t.asset_id
+        return (
+          <tr key={t.id}>
+            <td>{new Date(t.transaction_date).toLocaleString()}</td>
+            <td>{nombreAsset}</td>
+            <td className={t.transaction_type === 'buy' ? 'tipo-compra' : 'tipo-venta'}>
+              {t.transaction_type === 'buy' ? 'Compra' : 'Venta'}
+            </td>
+            <td>{t.quantity}</td>
+            <td>${Number(t.price_per_unit).toFixed(2)}</td>
+            <td>${Number(t.total_amount).toFixed(2)}</td>
+          </tr>
+        )
+      })}
+    </tbody>
+  </table>
+  )}
     </div>
   )
 }

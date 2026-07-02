@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import api from '../utils/api'
 import AssetCard from '../components/AssetCard'
-import ModalTransaccion from '../components/ModalTransaccion' // Importamos el modal único
+import ModalTransaccion from '../components/ModalTransaccion' 
 import { REFRESH_INTERVAL } from '../utils/constants'
 import './PanelPage.css' 
 
@@ -11,7 +11,6 @@ function PortfolioPage() {
   const userId = localStorage.getItem('user_id')
   const [error, setError] = useState('')
 
-  // Estados del modal genérico
   const [modalOpen, setModalOpen] = useState(false)
   const [tipoTransaccion, setTipoTransaccion] = useState('buy') // 'buy' o 'sell'
   const [assetSeleccionado, setAssetSeleccionado] = useState(null)
@@ -44,7 +43,7 @@ function PortfolioPage() {
     try {
       const url = tipo === 'buy' ? '/trade/buy' : '/trade/sell'
       await api.post(url, { asset_id: assetId, quantity: cantidad })
-      obtenerDatos() // Recargamos balances en caliente
+      obtenerDatos() 
       return true
     } catch (err) {
       return false
@@ -66,7 +65,7 @@ function PortfolioPage() {
     <div className="page-container">
       <h2>Mi Portfolio</h2>
       {perfil && <p className="saldo-disponible">Dinero disponible: ${perfil.balance}</p>}
-      {error && <p className="error">{error}</p>}
+      {error && <p className="mensaje-error">{error}</p>}
 
       <div className="assets-grid">
         {portfolio.map(item => (
@@ -92,7 +91,6 @@ function PortfolioPage() {
         ))}
       </div>
 
-      {/* LLAMADO AL COMPONENTE */}
       <ModalTransaccion 
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}

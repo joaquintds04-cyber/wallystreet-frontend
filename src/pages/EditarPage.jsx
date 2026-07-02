@@ -4,8 +4,8 @@ import api from '../utils/api'
 import './EditarPage.css'
 
 function EditarPage() {
-  // Si venimos de /editar (navbar) no hay userId en la URL -> se edita el usuario logueado.
-  // Si venimos de /editar/:userId (admin desde el listado) -> se edita ese usuario puntual.
+  // Si venimos de /editar (navbar) no hay userId en la URL se edita el usuario logueado.
+  // Si venimos de /editar/:userId (admin desde el listado) se edita ese usuario puntual.
   const { userId: userIdDeLaUrl } = useParams()
   const navigate = useNavigate()
 
@@ -22,7 +22,6 @@ function EditarPage() {
   const [nombreActual, setNombreActual] = useState('')
 
   // Traemos los datos actuales del usuario a editar, para mostrar su nombre
-  // (esto también sirve para que el admin sepa a quién está editando).
   useEffect(() => {
     let isMounted = true
     const obtenerUsuario = async () => {
@@ -67,7 +66,6 @@ function EditarPage() {
     setErrores([])
     setMensajeExito('')
 
-    // Validación en el frontend antes de llamar al backend
     const erroresValidacion = validar()
     if (erroresValidacion.length > 0) {
       setErrores(erroresValidacion)
@@ -94,7 +92,6 @@ function EditarPage() {
       setRepetirPassword('')
 
       if (!editandoOtroUsuario) {
-        // Nos estamos editando a nosotros mismos: reflejamos el cambio en el NavBar y recargamos
         if (nombre.trim()) {
           localStorage.setItem('user_name', nombre.trim())
         }
@@ -102,7 +99,7 @@ function EditarPage() {
           window.location.reload()
         }, 2000)
       } else {
-        // El admin editó a otro usuario: no tocamos su localStorage, volvemos al listado
+        // Si el admin editó a otro usuario, lo redirigimos al listado de usuarios
         setTimeout(() => {
           navigate('/admin')
         }, 2000)

@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { BASE_URL } from '../utils/constants'
 import api from '../utils/api'
 
 function RegistroPage() {
@@ -23,7 +21,6 @@ function RegistroPage() {
       nuevosErrores.push('El email debe tener un formato válido')
     }
 
-   
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&#]).{8,}$/
     if (!password || !passwordRegex.test(password)) {
       nuevosErrores.push('La password debe tener al menos 8 caracteres, mayúsculas, minúsculas, números y caracteres especiales')
@@ -33,7 +30,6 @@ function RegistroPage() {
   }
 
   const handleRegistro = async () => {
-    // Primero validamos en el frontend
     const erroresValidacion = validar()
     if (erroresValidacion.length > 0) {
       setErrores(erroresValidacion)
@@ -41,27 +37,21 @@ function RegistroPage() {
     }
 
     try {
-      await api .post(
-        '/users',
-        { name: nombre, email, password }
-      )
-      // Si salió bien, redirigimos al login
+      await api.post('/users', { name: nombre, email, password })
       navigate('/login')
-
     } catch (error) {
-      // Si el backend rechaza (email ya existe, etc.)
       setErrores([error.response?.data?.message || 'Error al registrarse'])
     }
   }
 
   return (
-    <div>
+    <div className="page-container">
       <h2>Registro</h2>
 
       {errores.length > 0 && (
-        <ul>
+        <ul className="errores-lista">
           {errores.map((error, index) => (
-            <li key={index} style={{color: 'red'}}>{error}</li>
+            <li key={index} className="error-item">{error}</li>
           ))}
         </ul>
       )}
@@ -72,14 +62,12 @@ function RegistroPage() {
         value={nombre}
         onChange={e => setNombre(e.target.value)}
       />
-
       <input
         type="email"
         placeholder="Email"
         value={email}
         onChange={e => setEmail(e.target.value)}
       />
-
       <input
         type="password"
         placeholder="Password"

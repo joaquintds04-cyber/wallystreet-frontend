@@ -15,14 +15,10 @@ function StatPage() {
     try {
       const response = await api.get('/assets')
       const nuevosAssets = response.data
-
-      // Actualizamos los precios anteriores con los actuales ANTES de setear los nuevos
       const nuevosPrevios = {}
       nuevosAssets.forEach(a => {
         nuevosPrevios[a.id] = preciosAnterioresRef.current[a.id] ?? a.current_price
       })
-
-      // Guardamos los precios actuales como "anteriores" para la próxima vuelta
       const actuales = {}
       nuevosAssets.forEach(a => { actuales[a.id] = a.current_price })
       preciosAnterioresRef.current = actuales
@@ -69,7 +65,7 @@ function StatPage() {
         </select>
       </div>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="mensaje-error">{error}</p>}
 
       <div className="assets-grid">
         {assetsFiltrados.map(asset => {

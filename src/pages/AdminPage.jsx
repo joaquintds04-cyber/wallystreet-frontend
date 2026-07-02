@@ -84,19 +84,19 @@ const actualizarPrecios = async () => {
             const esPrimero = posicionGlobal === 0 && paginaActual === 1 && !filtroNombre
 
             return (
-              <tr key={usuario.user_id} className={esPrimero ? 'admin-primer-lugar' : ''}>
+              <tr key={usuario.id} className={esPrimero ? 'admin-primer-lugar' : ''}>
                 <td>{posicionGlobal + 1}</td>
                 <td>
                   {esPrimero && <span className="admin-trofeo">🏆 </span>}
                   {usuario.name}
-                </td>
-                <td>${Number(usuario.total_portfolio_value).toFixed(2)}</td>
-                <td>
-                  <Link to={`/editar/${usuario.user_id}`} className="btn-editar-usuario">
-                    Editar
-                  </Link>
-                </td>
-              </tr>
+               </td>
+               <td>${Number(usuario.total_portfolio_value).toFixed(2)}</td>
+               <td>
+                <Link to={`/editar/${usuario.id}`} className="btn-editar-usuario">
+                  Editar
+                </Link>
+               </td>
+            </tr>
                )
           })}
         </tbody>
